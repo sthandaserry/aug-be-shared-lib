@@ -1,0 +1,16 @@
+{
+  "watch": [
+    "src/web",
+    "src/admin",
+    "src/file"
+  ],
+  "ext": "ts",
+  "ignore": [
+    "src/web/**/*.spec.ts",
+    "src/admin/**/*.spec.ts",
+    "src/file/**/*.spec.ts"
+  ],
+  "execMap": {
+    "ts": "ts-node -r tsconfig-paths/register"
+  }
+}
