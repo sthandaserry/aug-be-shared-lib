@@ -62,3 +62,22 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Module
+
+```
+Module structure
+|-admins
+    |- interfaces    
+        |- admin.interface.ts
+    |- admin.controller.ts 
+    |- admin.module.ts     
+    |- admin.service.ts
+
+    Note: Each module should be register in `app.module.ts` for using this features. If you want to share the `AdminService` instance between few other modules. In order to do that, we need to put the AdminsService into `exports` array.        
+```
+
+
+// Mongoose Schemas
+```
+Each schema file map with mongoDB collection and defines shape of the documents with that collections
+```
