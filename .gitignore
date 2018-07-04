@@ -11,3 +11,5 @@ webpack.config.js
 nodemon.json
 test
 tsconfig.json
+.nestcli.json
+.prettierrc
