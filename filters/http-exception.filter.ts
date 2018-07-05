@@ -5,6 +5,8 @@
  * created: 05/07/2018
  * lastModified: 05/07/2018
  */
+
+// TODO: Need to off warning adding `experimentalDecorators`
 import { ExceptionFilter, Catch, ArgumentsHost } from '@nestjs/common';
 import { HttpException } from '@nestjs/common';
 
