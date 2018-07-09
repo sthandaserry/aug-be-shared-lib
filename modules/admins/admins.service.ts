@@ -21,7 +21,9 @@ export class AdminsService {
   async create(admin: Admin): Promise<Admin> {
     try {
       const createdAdmin = new this.adminModel(admin);
-      return await createdAdmin.save();
+      return await createdAdmin.save().exec((err, res) => {
+        console.log(err);
+      });
     } catch (e) {
       throw new HttpException(e, HttpStatus.UNAUTHORIZED);
     }
