@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseFilters, UnauthorizedException, HttpStatus, HttpException } from '@nestjs/common';
 import { AdminsService } from './admins.service';
 import { Admin } from './interfaces/admin.interface';
+import { HttpExceptionFilter } from '../../filters';
 
 @Controller('admins')
 export class AdminsController {
@@ -9,7 +10,7 @@ export class AdminsController {
 
     @Post()
     async create(@Body() admin: Admin) {
-        return await this.adminsService.create(admin);
+         return await this.adminsService.create(admin);
     }
 
     @Get()
