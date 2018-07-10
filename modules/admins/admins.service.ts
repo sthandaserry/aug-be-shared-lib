@@ -8,7 +8,6 @@
 
 import { Model, ValidationError } from 'mongoose';
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import { IAdmin } from './interfaces/admin.interface';
 
 @Injectable()
