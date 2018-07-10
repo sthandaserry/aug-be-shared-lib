@@ -9,17 +9,17 @@
 import { Model, ValidationError } from 'mongoose';
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Admin } from './interfaces/admin.interface';
+import { IAdmin } from './interfaces/admin.interface';
 
 @Injectable()
 export class AdminsService {
 
   constructor(
     @Inject('AdminModelToken')
-    private readonly adminModel: Model<Admin>,
+    private readonly adminModel: Model<IAdmin>,
   ) { }
 
-  async create(admin: Admin): Promise<Admin> {
+  async create(admin: IAdmin): Promise<IAdmin> {
     try {
       const createdAdmin = new this.adminModel(admin);
       return await createdAdmin.save();
@@ -28,7 +28,7 @@ export class AdminsService {
     }
 
   }
-  async findAll(): Promise<Admin[]> {
+  async findAll(): Promise<IAdmin[]> {
     return await this.adminModel.find().exec();
   }
 }
