@@ -5,7 +5,8 @@
  * created: 29/06/2018
  * lastModified: 29/06/2018
  */
-export class Admin {
+import { Document } from 'mongoose';
+export interface Admin extends Document {
     readonly username: string;
     readonly password: string;
   }
