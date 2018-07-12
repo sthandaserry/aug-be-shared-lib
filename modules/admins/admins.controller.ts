@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body, UseFilters, UnauthorizedException, HttpStatus, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseFilters, UnauthorizedException, HttpStatus, HttpException, Res } from '@nestjs/common';
 import { AdminsService } from './admins.service';
-import { IAdmin } from './interfaces/admin.interface';
+import { Admin } from './interfaces/admin.interface';
 
 @Controller('admins')
 export class AdminsController {
@@ -8,8 +8,14 @@ export class AdminsController {
     constructor(private readonly adminsService: AdminsService) { }
 
     @Post()
-    async create(@Body() admin: IAdmin) {
-         return await this.adminsService.create(admin);
+    async create(@Body() admin: Admin, @Res() res) {
+        const userExist: Admin[] = await this.adminsService.find({uname : admin.uname});
+        if (userExist.length === 0){
+            const result = await this.adminsService.create(admin);
+            res.status(HttpStatus.CREATED).json(result);
+        }else{
+            res.status(HttpStatus.CONFLICT).json({message : 'User already exist!'});
+        }
     }
 
     @Get()

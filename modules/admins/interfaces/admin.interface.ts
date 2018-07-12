@@ -6,7 +6,7 @@
  * lastModified: 10/07/2018
  */
 import { Document } from 'mongoose';
-export interface IAdmin extends Document {
+export interface Admin extends Document {
   readonly uname: string; // Username
   readonly pass: string; // Password
   readonly fname?: string; // First Name
