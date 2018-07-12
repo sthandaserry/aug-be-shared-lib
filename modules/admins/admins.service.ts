@@ -9,6 +9,7 @@
 import { Model, ValidationError } from 'mongoose';
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Admin } from './interfaces/admin.interface';
+import { Encrypter} from '../../utils';
 
 @Injectable()
 export class AdminsService {
@@ -20,10 +21,16 @@ export class AdminsService {
 
   async create(admin: Admin): Promise<Admin> {
     try {
+
+      // Password encrption
+      const encrypter = new Encrypter();
+      const salt = encrypter.createSalt();
+      admin.salt = salt;
+      admin.hpwd = encrypter.hashPwd(salt, admin.pwd as string);
+      admin.pwd = undefined;
+
       const createdAdmin = new this.adminModel(admin);
-      return await createdAdmin.save().exec((err, res) => {
-        console.log(err);
-      });
+      return await createdAdmin.save();
     } catch (e) {
       throw new HttpException(e, HttpStatus.UNAUTHORIZED);
     }
