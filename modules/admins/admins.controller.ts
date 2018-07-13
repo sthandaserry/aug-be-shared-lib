@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, UseFilters, UnauthorizedException, HttpStatus, HttpException, Res } from '@nestjs/common';
 import { AdminsService } from './admins.service';
 import { Admin } from './interfaces/admin.interface';
-import { createHash } from 'crypto';
+import { wrapConflict } from 'aug-nest-tools';
 
 @Controller('admins')
 export class AdminsController {
@@ -13,15 +13,14 @@ export class AdminsController {
         const userExist: Admin[] = await this.adminsService.find({ uname: admin.uname });
         if (userExist.length === 0) {
             const result = await this.adminsService.create(admin);
-            res.status(HttpStatus.CREATED).json(result);
+            if (result) {
+                res.status(HttpStatus.CREATED).json(result);
+            } else {
+                res.status(HttpStatus.BAD_REQUEST).json(result);
+            }
         } else {
-            res.status(HttpStatus.CONFLICT).json({ message: 'User already exist!' });
+            res.status(HttpStatus.CONFLICT).json(wrapConflict('User already exist!'));
         }
-    }
-
-    @Post('/login')
-    async login(@Body() admin: Admin, @Res() res) {
-        res.status(HttpStatus.ACCEPTED).json();
     }
 
     @Get()
