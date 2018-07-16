@@ -9,7 +9,6 @@
 import { Model, ValidationError } from 'mongoose';
 import { Injectable, Inject, HttpException, HttpStatus, Next } from '@nestjs/common';
 import { Admin } from './interfaces/admin.interface';
-import { Credential } from './interfaces/credential.interface';
 import { Encrypter } from '../../utils';
 
 @Injectable()
@@ -19,21 +18,6 @@ export class AdminsService {
     @Inject('AdminModelToken')
     private readonly adminModel: Model<Admin>,
   ) { }
-
-  async authenticate(credential: Credential): Promise<Admin> {
-    try {
-      const user = await this.findOne({ uname: credential.uname });
-      if (user) {
-        const encrypter = new Encrypter();
-        if (encrypter.doesPasswordMatch(credential.pwd, user.hpwd, user.salt)) {
-          return user;
-        }
-      }
-    } catch (e) {
-      throw new HttpException(e, HttpStatus.UNAUTHORIZED);
-    }
-
-  }
 
   async create(admin: Admin): Promise<Admin> {
     try {
