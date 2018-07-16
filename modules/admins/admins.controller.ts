@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, UseFilters, UnauthorizedException, HttpStatus, HttpException, Res } from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, Param, UseFilters, UnauthorizedException, HttpStatus, HttpException, Res } from '@nestjs/common';
 import { AdminsService } from './admins.service';
 import { Admin } from './interfaces/admin.interface';
-import { wrapConflict } from 'aug-nest-tools';
+import { wrapConflict, wrapSuccess } from 'aug-nest-tools';
 
 @Controller('admins')
 export class AdminsController {
@@ -14,7 +14,7 @@ export class AdminsController {
         if (userExist.length === 0) {
             const result = await this.adminsService.create(admin);
             if (result) {
-                res.status(HttpStatus.CREATED).json(result);
+                res.status(HttpStatus.CREATED).json(wrapSuccess(result, 'Created Successfully.'));
             } else {
                 res.status(HttpStatus.BAD_REQUEST).json(result);
             }
@@ -26,5 +26,15 @@ export class AdminsController {
     @Get()
     async findAll() {
         return await this.adminsService.findAll();
+    }
+
+    @Put('/:id')
+    async update(@Body() admin: Admin, @Res() res, @Param() param) {
+        const result = await this.adminsService.update(admin, param.id);
+        if (result) {
+            res.status(HttpStatus.ACCEPTED).json(wrapSuccess(result, 'Updated Successfully.'));
+        } else {
+            res.status(HttpStatus.BAD_REQUEST).json(result);
+        }
     }
 }

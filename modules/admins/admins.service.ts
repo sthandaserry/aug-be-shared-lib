@@ -19,7 +19,7 @@ export class AdminsService {
     private readonly adminModel: Model<Admin>,
   ) { }
 
-  async create(admin: Admin): Promise<Admin> {
+  async create(admin: Admin): Promise<any> {
     try {
       // Password encrption
       const encrypter = new Encrypter();
@@ -35,6 +35,17 @@ export class AdminsService {
     }
 
   }
+  async update(admin: Admin, id): Promise<Admin> {
+    try {
+      delete admin.uname;
+      delete admin.pwd;
+      return await this.adminModel.findOneAndUpdate({ _id: id }, admin, { fields: { fname: 1, lname: 1 }, new: true }).exec();
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.UNAUTHORIZED);
+    }
+
+  }
+
   async findAll(): Promise<Admin[]> {
     return await this.adminModel.find().exec();
   }

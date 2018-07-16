@@ -7,7 +7,7 @@
  */
 import { Document } from 'mongoose';
 export interface Admin extends Document {
-  readonly uname: string; // Username
+  uname?: string; // Username
   pwd?: string; // Password
   salt: string; // Salt string
   hpwd: string; // hashed password
