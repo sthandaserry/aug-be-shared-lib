@@ -1,3 +1,10 @@
+/**
+ * @file auth.service.ts - Authenticate admin user details and generate authroziation token.
+ * @author Kalimuthu Selvaraj
+ * @version 1.0.0
+ * created: 16/07/2018
+ * lastModified: 16/07/2018
+ */
 import * as jwt from 'jsonwebtoken';
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Model, ValidationError } from 'mongoose';
