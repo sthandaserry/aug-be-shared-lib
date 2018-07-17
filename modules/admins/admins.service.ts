@@ -7,8 +7,9 @@
  */
 
 import { Model, ValidationError } from 'mongoose';
-import { Injectable, Inject, HttpException, HttpStatus, Next } from '@nestjs/common';
+import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Admin } from './interfaces/admin.interface';
+import { Password } from './interfaces/password.interface';
 import { Encrypter } from '../../utils';
 
 @Injectable()
@@ -37,9 +38,28 @@ export class AdminsService {
   }
   async update(admin: Admin, id): Promise<Admin> {
     try {
-      delete admin.uname;
       delete admin.pwd;
       return await this.adminModel.findOneAndUpdate({ _id: id }, admin, { fields: { fname: 1, lname: 1 }, new: true }).exec();
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.UNAUTHORIZED);
+    }
+
+  }
+
+  async changePassword(password: Password, id): Promise<any> {
+    try {
+      const admin: Admin = await this.adminModel.findOne({ _id: id }).exec();
+      if (admin) {
+        const encrypter = new Encrypter();
+        if (await encrypter.doesPasswordMatch(password.opwd, admin.hpwd, admin.salt)) {
+          const salt = encrypter.createSalt();
+          admin.salt = salt;
+          admin.hpwd = encrypter.hashPwd(salt, password.pwd as string);
+          return await this.adminModel.findOneAndUpdate({ _id: id }, admin).exec();
+        } else {
+          return false;
+        }
+      }
     } catch (e) {
       throw new HttpException(e, HttpStatus.UNAUTHORIZED);
     }

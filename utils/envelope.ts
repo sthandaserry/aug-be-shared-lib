@@ -14,6 +14,12 @@ export function wrapSuccess(data: {} | Array<{}>, message?: string): IEnvelope {
 // Resource already exist
 export function wrapConflict(message?: string): IEnvelope {
   return {
-    message: message || 'Conflict',
+    message: message || 'Conflict.',
+  };
+}
+
+export function wrapBadrequest(message?: string): IEnvelope {
+  return {
+    message: message || 'Bad Request.',
   };
 }

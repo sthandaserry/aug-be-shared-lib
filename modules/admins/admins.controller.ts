@@ -1,11 +1,13 @@
 import {
     Controller, Get, Post, Put, Body, Param, UseFilters, UseGuards,
-    UnauthorizedException, HttpStatus, HttpException, Res,
+    UnauthorizedException, HttpStatus, HttpException, Res, Patch,
 } from '@nestjs/common';
 import { AdminsService } from './admins.service';
 import { Admin } from './interfaces/admin.interface';
-import { wrapConflict, wrapSuccess } from 'aug-nest-tools';
+import { Password } from './interfaces/password.interface';
+import { wrapConflict, wrapSuccess, wrapBadrequest } from 'aug-nest-tools';
 import { AuthGuard } from '@nestjs/passport';
+import * as jwt from 'jsonwebtoken';
 
 @Controller('admins')
 @UseGuards(AuthGuard('jwt'))
@@ -41,5 +43,15 @@ export class AdminsController {
         } else {
             res.status(HttpStatus.BAD_REQUEST).json(result);
         }
+    }
+
+    @Patch('/changepassword/:id')
+    async changePassword(@Body() password: Password, @Res() res, @Param() param) {
+            const result = await this.adminsService.changePassword(password, param.id);
+            if (result) {
+                res.status(HttpStatus.ACCEPTED).json(wrapSuccess(result, 'Updated Successfully.'));
+            } else {
+                res.status(HttpStatus.BAD_REQUEST).json(wrapBadrequest('Invalid Credentials.'));
+            }
     }
 }

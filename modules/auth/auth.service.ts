@@ -25,7 +25,6 @@ export class AuthService {
       const user: Admin = await this.authModel.findOne({ uname: credential.uname });
       if (user) {
         const encrypter = new Encrypter();
-        const isMatch = await encrypter.doesPasswordMatch(credential.pwd, user.hpwd, user.salt);
         if (await encrypter.doesPasswordMatch(credential.pwd, user.hpwd, user.salt)) {
           const userObj: JwtPayload = { uname: user.uname };
           const expiresIn = 3600;
@@ -34,6 +33,8 @@ export class AuthService {
             expiresIn,
             accessToken,
           };
+        }else{
+          return false;
         }
       }
     } catch (e) {
