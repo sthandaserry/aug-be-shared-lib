@@ -5,7 +5,7 @@ import {
 import { AdminsService } from './admins.service';
 import { Admin } from './interfaces/admin.interface';
 import { Password } from './interfaces/password.interface';
-import { wrapConflict, wrapSuccess, wrapBadrequest } from 'aug-nest-tools';
+import { wrapConflict, wrapSuccess, wrapBadrequest, wrapNocontent } from 'aug-nest-tools';
 import { AuthGuard } from '@nestjs/passport';
 import * as jwt from 'jsonwebtoken';
 
@@ -35,9 +35,19 @@ export class AdminsController {
         return await this.adminsService.findAll();
     }
 
+    @Get('/:id')
+    async findOne(@Param() params, @Res() res) {
+        const result = await this.adminsService.findOne({ _id: params.id });
+        if (result) {
+            res.status(HttpStatus.OK).json(wrapSuccess(result, 'Here is the admin information.'));
+        } else {
+            res.status(HttpStatus.OK).json(wrapNocontent('No content available'));
+        }
+    }
+
     @Put('/:id')
-    async update(@Body() admin: Admin, @Res() res, @Param() param) {
-        const result = await this.adminsService.update(admin, param.id);
+    async update(@Body() admin: Admin, @Res() res, @Param() params) {
+        const result = await this.adminsService.update(admin, params.id);
         if (result) {
             res.status(HttpStatus.ACCEPTED).json(wrapSuccess(result, 'Updated Successfully.'));
         } else {
@@ -47,11 +57,11 @@ export class AdminsController {
 
     @Patch('/changepassword/:id')
     async changePassword(@Body() password: Password, @Res() res, @Param() param) {
-            const result = await this.adminsService.changePassword(password, param.id);
-            if (result) {
-                res.status(HttpStatus.ACCEPTED).json(wrapSuccess(result, 'Updated Successfully.'));
-            } else {
-                res.status(HttpStatus.BAD_REQUEST).json(wrapBadrequest('Invalid Credentials.'));
-            }
+        const result = await this.adminsService.changePassword(password, param.id);
+        if (result) {
+            res.status(HttpStatus.ACCEPTED).json(wrapSuccess(result, 'Updated Successfully.'));
+        } else {
+            res.status(HttpStatus.BAD_REQUEST).json(wrapBadrequest('Invalid Credentials.'));
+        }
     }
 }

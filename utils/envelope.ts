@@ -11,6 +11,12 @@ export function wrapSuccess(data: {} | Array<{}>, message?: string): IEnvelope {
   };
 }
 
+export function wrapNocontent(message?: string): IEnvelope {
+  return {
+    message: message || 'No content.',
+  };
+}
+
 // Resource already exist
 export function wrapConflict(message?: string): IEnvelope {
   return {
@@ -20,6 +26,6 @@ export function wrapConflict(message?: string): IEnvelope {
 
 export function wrapBadrequest(message?: string): IEnvelope {
   return {
-    message: message || 'Bad Request.',
+    message: message || 'Bad request.',
   };
 }
