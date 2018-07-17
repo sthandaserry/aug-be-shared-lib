@@ -31,8 +31,11 @@ export class AdminsController {
     }
 
     @Get()
-    async findAll() {
-        return await this.adminsService.findAll();
+    async findAll(@Res() res) {
+        const result = await this.adminsService.findAll();
+        if (result.length > 0) {
+            res.status(HttpStatus.OK).json(wrapSuccess(result, 'Here is all admin informations.'));
+        }
     }
 
     @Get('/:id')
