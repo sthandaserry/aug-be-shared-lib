@@ -1,9 +1,14 @@
-import { Controller, Get, Post, Put, Body, Param, UseFilters, UnauthorizedException, HttpStatus, HttpException, Res } from '@nestjs/common';
+import {
+    Controller, Get, Post, Put, Body, Param, UseFilters, UseGuards,
+    UnauthorizedException, HttpStatus, HttpException, Res,
+} from '@nestjs/common';
 import { AdminsService } from './admins.service';
 import { Admin } from './interfaces/admin.interface';
 import { wrapConflict, wrapSuccess } from 'aug-nest-tools';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('admins')
+@UseGuards(AuthGuard('jwt'))
 export class AdminsController {
 
     constructor(private readonly adminsService: AdminsService) { }

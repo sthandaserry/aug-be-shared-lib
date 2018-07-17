@@ -20,9 +20,9 @@ export class AuthController {
     return await this.authService.authenticate(credential);
   }
 
-  // @Get('data')
-  // @UseGuards(AuthGuard('jwt'))
-  // findAll() {
-  //   // this route is restricted
-  // }
+  @Get('data')
+  @UseGuards(AuthGuard('jwt'))
+  findAll() {
+    // this route is restricted
+  }
 }
