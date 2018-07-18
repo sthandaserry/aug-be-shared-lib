@@ -18,20 +18,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const status = exception ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    if (status === HttpStatus.UNAUTHORIZED)
-      return response.status(status).json({
-        statusCode: exception.getStatus(),
-        timestamp: new Date().toISOString(),
-        message: exception.message,
-        path: request.url,
-      });
-    if (status === HttpStatus.NOT_FOUND)
-      return response.status(status).json({
-        statusCode: exception.getStatus(),
-        timestamp: new Date().toISOString(),
-        message: exception.message,
-        path: request.url,
-      });
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
       if (process.env.NODE_ENV === 'production') {
         console.error(exception.stack);
@@ -41,6 +27,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
         const message = exception.stack;
         return response.status(status).send(message);
       }
+    } else {
+      return response.status(status).json({
+        statusCode: exception.getStatus(),
+        timestamp: new Date().toISOString(),
+        message: exception.message,
+        path: request.url,
+      });
     }
   }
 }

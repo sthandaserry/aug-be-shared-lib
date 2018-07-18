@@ -8,7 +8,7 @@ export interface IEnvelope {
 export function wrapSuccess(data: {} | Array<{}>, message?: string): IEnvelope {
   return {
     statusCode: 200,
-    data,
+    data: data || undefined,
     message: message || 'No message provided.',
   };
 }
@@ -32,5 +32,12 @@ export function wrapBadrequest(message?: string): IEnvelope {
   return {
     statusCode: 400,
     message: message || 'Bad request.',
+  };
+}
+
+export function wrapError(error?: Error, message?: string): IEnvelope {
+  return {
+    statusCode: 400,
+    message: error ? error.message : message,
   };
 }

@@ -10,7 +10,7 @@ import { Controller, Get, UseGuards, Body, Post, Res, HttpStatus } from '@nestjs
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { Credential } from './interfaces/credential.interface';
-import { wrapSuccess, wrapBadrequest } from '../..';
+import { wrapSuccess, wrapBadrequest } from '../../../aug-nest-tools';
 
 @Controller('auth')
 export class AuthController {

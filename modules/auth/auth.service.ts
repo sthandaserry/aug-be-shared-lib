@@ -11,8 +11,8 @@ import { Model, ValidationError } from 'mongoose';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { Admin } from '../admins/interfaces/admin.interface';
 import { Credential } from './interfaces/credential.interface';
-
 import { Encrypter } from '../../utils';
+import { wrapError } from '../../../aug-nest-tools';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +33,7 @@ export class AuthService {
             expiresIn,
             accessToken,
           };
-        }else{
+        } else {
           return false;
         }
       }
@@ -41,6 +41,20 @@ export class AuthService {
       throw new HttpException(e, HttpStatus.UNAUTHORIZED);
     }
 
+  }
+
+  async forgotPassword(email: any, token: string): Promise<any> {
+    try {
+      const admin: Admin = await this.authModel.findOne({ email });
+      if (admin) {
+        admin.token = token;
+        return await this.authModel.findOneAndUpdate({ email: admin.email }, { token }).exec();
+      } else {
+        return wrapError(null, 'Email not found');
+      }
+    } catch (e) {
+      throw new HttpException(wrapError(e, 'Something went wrong!'), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async validateUser(payload: JwtPayload): Promise<any> {

@@ -11,6 +11,8 @@ export interface Admin extends Document {
   pwd?: string; // Password
   salt: string; // Salt string
   hpwd: string; // hashed password
+  email?: string; // User email
+  token?: string; // Reset token
   readonly fname?: string; // First Name
   readonly lname?: string; // Last Name
   readonly cAt?: Date; // Created At
