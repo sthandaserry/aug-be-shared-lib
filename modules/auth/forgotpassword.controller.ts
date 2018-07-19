@@ -20,10 +20,10 @@ export class ForgotpasswordController {
     const resetToken = await generateToken(10);
     const admin = await this.authService.forgotPassword(body.email, resetToken);
     if (admin) {
-      // TODO: Need to send email
-      // Reset link should be http://domain.com/:resetToken/:id(userid)
-      console.log('http://domain.com/' + resetToken + '/' + admin.id);
+      // TODO: Need to send email with reset token
       return wrapSuccess({ token: admin.token }, 'Need to send email.');
+    } else {
+      return wrapError(null, 'Email not found');
     }
   }
 }

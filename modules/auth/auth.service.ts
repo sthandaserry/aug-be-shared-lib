@@ -6,7 +6,7 @@
  * lastModified: 16/07/2018
  */
 import * as jwt from 'jsonwebtoken';
-import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, Inject, HttpException, HttpStatus, Body } from '@nestjs/common';
 import { Model, ValidationError } from 'mongoose';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { Admin } from '../admins/interfaces/admin.interface';
@@ -53,7 +53,24 @@ export class AuthService {
         return wrapError(null, 'Email not found');
       }
     } catch (e) {
-      throw new HttpException(wrapError(e, 'Something went wrong!'), HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(wrapError(e, 'Something went wrong.'), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async resetPassword(data: any): Promise<any> {
+    try {
+      const admin: Admin = await this.authModel.findOne({ token : data.token });
+      if (admin) {
+        const encrypter = new Encrypter();
+        const salt = encrypter.createSalt();
+        admin.salt = salt;
+        admin.hpwd = encrypter.hashPwd(salt, data.pwd as string);
+        return await this.authModel.findOneAndUpdate({ email: admin.email }, { admin, $unset: { token: 1 } }).exec();
+      } else {
+        return false;
+      }
+    } catch (e) {
+      throw new HttpException(wrapError(e, 'Something went wrong.'), HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
