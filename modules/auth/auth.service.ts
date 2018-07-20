@@ -17,8 +17,7 @@ import { wrapError } from '../../../aug-nest-tools';
 @Injectable()
 export class AuthService {
 
-  constructor(@Inject('AuthModelToken')
-  private readonly authModel: Model<any>) { }
+  constructor(@Inject('AuthModelToken') private readonly authModel: Model<any>, @Inject('MailerProvider') private readonly mailerProvider) { }
 
   async authenticate(credential: Credential): Promise<any> {
     try {
@@ -59,7 +58,7 @@ export class AuthService {
 
   async resetPassword(data: any): Promise<any> {
     try {
-      const admin: Admin = await this.authModel.findOne({ token : data.token });
+      const admin: Admin = await this.authModel.findOne({ token: data.token });
       if (admin) {
         const encrypter = new Encrypter();
         const salt = encrypter.createSalt();

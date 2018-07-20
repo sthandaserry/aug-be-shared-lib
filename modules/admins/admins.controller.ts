@@ -10,7 +10,7 @@ import { AuthGuard } from '@nestjs/passport';
 import * as jwt from 'jsonwebtoken';
 
 @Controller('admins')
-// @UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'))
 export class AdminsController {
 
     constructor(private readonly adminsService: AdminsService) { }
