@@ -9,13 +9,13 @@ import { Document } from 'mongoose';
 export interface User extends Document {
   name?: string;
   email?: string; // Username
-  role?: string;
+  role?: number;
   profile?: object;
   pwd?: string; // Password
   salt: string; // Salt string
   hpwd: string; // hashed password
   token?: string; // Reset token
-  status?: string;
+  status?: number;
   isIn?: string;
   readonly fname?: string; // First Name
   readonly lname?: string; // Last Name

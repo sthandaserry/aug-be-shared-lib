@@ -10,7 +10,8 @@ import { Controller, Get, UseGuards, Body, Post, Res, HttpStatus, Patch, HttpExc
 import { AuthGuard } from '@nestjs/passport';
 import { UserAuthService } from './user-auth.service';
 import { UserCredential } from './interfaces/user-credential.interface';
-import { wrapSuccess, wrapBadrequest, generateToken, wrapConflict, wrapError, User } from '../../../aug-nest-tools';
+import { User } from '../users/interfaces/user.interface';
+import { wrapSuccess, wrapBadrequest, generateToken, wrapConflict, wrapError } from '../../../aug-nest-tools';
 
 @Controller('/auth')
 export class RegistrationController {
@@ -19,7 +20,7 @@ export class RegistrationController {
   async register(@Body() user: User, @Res() res): Promise<any> {
     const userExist: User[] = await this.authService.find({ uname: user.email });
     if (userExist.length === 0) {
-      const result = await this.authService.create(user);
+      const result = await this.authService.register(user);
       if (result) {
         res.status(HttpStatus.CREATED).json(wrapSuccess(result, 'Created Successfully.'));
       } else {

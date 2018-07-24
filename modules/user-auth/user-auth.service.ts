@@ -19,7 +19,7 @@ export class UserAuthService {
 
   constructor(@Inject('AuthModelToken') private readonly userAuthModel: Model<any>, @Inject('MailerProvider') private readonly mailerProvider) { }
 
-  async create(user: User): Promise<any> {
+  async register(user: User): Promise<any> {
     try {
       // Password encrption
       const encrypter = new Encrypter();
@@ -27,6 +27,7 @@ export class UserAuthService {
       user.salt = salt;
       user.hpwd = encrypter.hashPwd(salt, user.pwd as string);
       user.pwd = undefined;
+      user.status = 1;
 
       const createdUser = new this.userAuthModel(user);
       return await createdUser.save();
