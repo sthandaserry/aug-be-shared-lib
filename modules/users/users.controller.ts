@@ -9,27 +9,11 @@ import { wrapConflict, wrapSuccess, wrapBadrequest, wrapNocontent } from 'aug-ne
 import { AuthGuard } from '@nestjs/passport';
 import * as jwt from 'jsonwebtoken';
 
-@Controller('users')
+@Controller('/users')
+@UseGuards(AuthGuard('jwt'))
 export class UsersController {
-
     constructor(private readonly usersService: UsersService) { }
 
-    @Post()
-    async create(@Body() user: User, @Res() res) {
-        const userExist: User[] = await this.usersService.find({ uname: user.email });
-        if (userExist.length === 0) {
-            const result = await this.usersService.create(user);
-            if (result) {
-                res.status(HttpStatus.CREATED).json(wrapSuccess(result, 'Created Successfully.'));
-            } else {
-                res.status(HttpStatus.BAD_REQUEST).json(result);
-            }
-        } else {
-            res.status(HttpStatus.CONFLICT).json(wrapConflict('User already exist!'));
-        }
-    }
-
-    @UseGuards(AuthGuard('jwt'))
     @Get()
     async findAll(@Res() res) {
         const result = await this.usersService.findAll();
@@ -38,7 +22,6 @@ export class UsersController {
         }
     }
 
-    @UseGuards(AuthGuard('jwt'))
     @Get('/:id')
     async findOne(@Param() params, @Res() res) {
         const result = await this.usersService.findOne({ _id: params.id });
@@ -49,7 +32,6 @@ export class UsersController {
         }
     }
 
-    @UseGuards(AuthGuard('jwt'))
     @Put('/:id')
     async update(@Body() admin: User, @Res() res, @Param() params) {
         const result = await this.usersService.update(admin, params.id);
@@ -60,7 +42,6 @@ export class UsersController {
         }
     }
 
-    @UseGuards(AuthGuard('jwt'))
     @Patch('/changepassword/:id')
     async changePassword(@Body() password: UserPassword, @Res() res, @Param() param) {
         const result = await this.usersService.changePassword(password, param.id);

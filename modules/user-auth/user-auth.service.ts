@@ -19,13 +19,29 @@ export class UserAuthService {
 
   constructor(@Inject('AuthModelToken') private readonly userAuthModel: Model<any>, @Inject('MailerProvider') private readonly mailerProvider) { }
 
+  async create(user: User): Promise<any> {
+    try {
+      // Password encrption
+      const encrypter = new Encrypter();
+      const salt = encrypter.createSalt();
+      user.salt = salt;
+      user.hpwd = encrypter.hashPwd(salt, user.pwd as string);
+      user.pwd = undefined;
+
+      const createdUser = new this.userAuthModel(user);
+      return await createdUser.save();
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.UNAUTHORIZED);
+    }
+
+  }
   async authenticate(credential: UserCredential): Promise<any> {
     try {
       const user: User = await this.userAuthModel.findOne({ email: credential.email });
       if (user) {
         const encrypter = new Encrypter();
         if (await encrypter.doesPasswordMatch(credential.pwd, user.hpwd, user.salt)) {
-          const userObj: UserJwtPayload = { uname: user.email };
+          const userObj: UserJwtPayload = { email: user.email };
           const expiresIn = 3600;
           const accessToken = jwt.sign(userObj, process.env.SECRET_KEY, { expiresIn });
           return {
@@ -33,6 +49,7 @@ export class UserAuthService {
             accessToken,
           };
         } else {
+
           return false;
         }
       }
@@ -74,6 +91,10 @@ export class UserAuthService {
   }
 
   async validateUser(payload: UserJwtPayload): Promise<any> {
-    return await this.userAuthModel.findOne({ uname: payload.uname });
+    return await this.userAuthModel.findOne({ uname: payload.email });
+  }
+
+  async find(whereColumn): Promise<User[]> {
+    return await this.userAuthModel.find(whereColumn).exec();
   }
 }

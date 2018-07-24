@@ -12,24 +12,18 @@ import { UserAuthService } from './user-auth.service';
 import { UserCredential } from './interfaces/user-credential.interface';
 import { wrapSuccess, wrapBadrequest } from '../../../aug-nest-tools';
 
-@Controller('users/auth')
+@Controller('/auth')
 export class UserAuthController {
   constructor(private readonly authService: UserAuthService) { }
 
-  @Post('login')
+  @Post('/login')
   async login(@Body() credential: UserCredential, @Res() res): Promise<any> {
     const result = await this.authService.authenticate(credential);
     if (result) {
-      res.status(HttpStatus.OK).json(wrapSuccess(result, 'Authunticated Successfully.'));
+      res.status(HttpStatus.OK).json(wrapSuccess(result, 'Authenticated Successfully.'));
       return result;
     } else {
       res.status(HttpStatus.BAD_REQUEST).json(wrapBadrequest('Invalid Credentials.'));
     }
-  }
-
-  @Get('data')
-  @UseGuards(AuthGuard('jwt'))
-  findAll() {
-    // this route is restricted
   }
 }

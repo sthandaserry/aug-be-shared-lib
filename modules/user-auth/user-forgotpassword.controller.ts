@@ -26,7 +26,7 @@ export class UserForgotpasswordController {
         subject: 'Biggest Buck reset password',
         html: '<b>Your reset code is: </b>' + admin.token,
       });
-      return wrapSuccess({ token: admin.token }, 'Need to send email.');
+      return wrapSuccess({ token: admin.token }, 'Email send successfully.');
     } else {
       return wrapError(null, 'Email not found');
     }

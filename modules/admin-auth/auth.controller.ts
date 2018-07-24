@@ -20,16 +20,10 @@ export class AuthController {
   async login(@Body() credential: Credential, @Res() res): Promise<any> {
     const result = await this.authService.authenticate(credential);
     if (result) {
-      res.status(HttpStatus.OK).json(wrapSuccess(result, 'Authunticated Successfully.'));
+      res.status(HttpStatus.OK).json(wrapSuccess(result, 'Authenticated Successfully.'));
       return result;
     } else {
       res.status(HttpStatus.BAD_REQUEST).json(wrapBadrequest('Invalid Credentials.'));
     }
-  }
-
-  @Get('data')
-  @UseGuards(AuthGuard('jwt'))
-  findAll() {
-    // this route is restricted
   }
 }

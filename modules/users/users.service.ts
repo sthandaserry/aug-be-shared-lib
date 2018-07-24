@@ -20,22 +20,6 @@ export class UsersService {
     private readonly userModel: Model<User>,
   ) { }
 
-  async create(user: User): Promise<any> {
-    try {
-      // Password encrption
-      const encrypter = new Encrypter();
-      const salt = encrypter.createSalt();
-      user.salt = salt;
-      user.hpwd = encrypter.hashPwd(salt, user.pwd as string);
-      user.pwd = undefined;
-
-      const createdUser = new this.userModel(user);
-      return await createdUser.save();
-    } catch (e) {
-      throw new HttpException(e, HttpStatus.UNAUTHORIZED);
-    }
-
-  }
   async update(user: User, id): Promise<User> {
     try {
       delete user.pwd;
@@ -64,14 +48,6 @@ export class UsersService {
       throw new HttpException(e, HttpStatus.UNAUTHORIZED);
     }
 
-  }
-
-  async findAll(): Promise<User[]> {
-    return await this.userModel.find().exec();
-  }
-
-  async find(whereColumn): Promise<User[]> {
-    return await this.userModel.find(whereColumn).exec();
   }
 
   async findOne(whereColumn) {
