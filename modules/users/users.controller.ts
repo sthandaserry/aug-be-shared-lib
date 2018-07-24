@@ -14,14 +14,6 @@ import * as jwt from 'jsonwebtoken';
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
 
-    @Get()
-    async findAll(@Res() res) {
-        const result = await this.usersService.findAll();
-        if (result.length > 0) {
-            res.status(HttpStatus.OK).json(wrapSuccess(result, 'Here is all user informations.'));
-        }
-    }
-
     @Get('/:id')
     async findOne(@Param() params, @Res() res) {
         const result = await this.usersService.findOne({ _id: params.id });
