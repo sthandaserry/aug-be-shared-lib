@@ -8,9 +8,10 @@ import { Password } from './interfaces/password.interface';
 import { wrapConflict, wrapSuccess, wrapBadrequest, wrapNocontent } from 'aug-nest-tools';
 import { AuthGuard } from '@nestjs/passport';
 import * as jwt from 'jsonwebtoken';
+import { Pagination, PaginationOptions } from '../../decorators/pagination.decorator';
 
-@Controller('admins')
-@UseGuards(AuthGuard('jwt'))
+@Controller('/admins')
+// @UseGuards(AuthGuard('jwt'))
 export class AdminsController {
 
     constructor(private readonly adminsService: AdminsService) { }
@@ -31,8 +32,8 @@ export class AdminsController {
     }
 
     @Get()
-    async findAll(@Res() res) {
-        const result = await this.adminsService.findAll();
+    async findAll(@Res() res,  @Pagination() pagination: PaginationOptions) {
+        const result = await this.adminsService.findAll(pagination);
         if (result.length > 0) {
             res.status(HttpStatus.OK).json(wrapSuccess(result, 'Here is all admin informations.'));
         }

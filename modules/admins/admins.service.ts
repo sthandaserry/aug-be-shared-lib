@@ -11,6 +11,7 @@ import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Admin } from './interfaces/admin.interface';
 import { Password } from './interfaces/password.interface';
 import { Encrypter } from '../../utils';
+import { PaginationOptions } from '../../decorators/pagination.decorator';
 
 @Injectable()
 export class AdminsService {
@@ -66,8 +67,12 @@ export class AdminsService {
 
   }
 
-  async findAll(): Promise<Admin[]> {
-    return await this.adminModel.find().exec();
+  async findAll(pagination?: PaginationOptions): Promise<Admin[]> {
+    try {
+      return await this.adminModel.find().limit(pagination.limit).skip(pagination.skip).exec();
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async find(whereColumn): Promise<Admin[]> {
