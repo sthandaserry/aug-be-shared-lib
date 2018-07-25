@@ -13,7 +13,7 @@ export const Pagination = createParamDecorator((_: string, req: Request): Pagina
 
     req.query.skip = (typeof req.query.skip === 'number') ?
         req.query.skip :
-        parseInt(req.query.skip, 10) || 1;
+        parseInt(req.query.skip, 10) || 0;
 
     if (req.query.limit > parseInt(process.env.MAX, 10)) {
         req.query.limit = parseInt(process.env.MAX, 10);
