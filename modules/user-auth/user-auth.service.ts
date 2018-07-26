@@ -92,7 +92,7 @@ export class UserAuthService {
   }
 
   async validateUser(payload: UserJwtPayload): Promise<any> {
-    return await this.userAuthModel.findOne({ uname: payload.email });
+    return await this.userAuthModel.findOne({ email: payload.email });
   }
 
   async find(whereColumn): Promise<User[]> {
