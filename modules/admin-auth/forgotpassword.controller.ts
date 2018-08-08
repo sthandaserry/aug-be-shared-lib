@@ -16,7 +16,7 @@ export class ForgotpasswordController {
   constructor(private readonly authService: AuthService, @Inject('MailerProvider') private readonly mailerProvider,
   ) { }
   @Patch('/forgotpassword')
-  async forgotPassword(@Body() body): Promise<any> {
+  async forgotPassword(@Body() body, @Res() res): Promise<any> {
     const resetToken = await generateToken(10);
     const admin = await this.authService.forgotPassword(body.email, resetToken);
     if (admin) {
@@ -26,9 +26,9 @@ export class ForgotpasswordController {
         subject: 'Biggest Buck reset password',
         html: '<b>Your reset code is: </b>' + admin.token,
       });
-      return wrapSuccess({ token: admin.token }, 'Need to send email.');
+      res.status(HttpStatus.OK).json(wrapSuccess({ token: admin.token }, 'Need to send email.'));
     } else {
-      return wrapError(null, 'Email not found');
+      res.status(HttpStatus.BAD_REQUEST).json(wrapError(null, 'Email not found'));
     }
   }
 }

@@ -49,7 +49,7 @@ export class AuthService {
         admin.token = token;
         return await this.authModel.findOneAndUpdate({ email: admin.email }, { token }).exec();
       } else {
-        return wrapError(null, 'Email not found');
+        return false;
       }
     } catch (e) {
       throw new HttpException(wrapError(e, 'Something went wrong.'), HttpStatus.INTERNAL_SERVER_ERROR);
