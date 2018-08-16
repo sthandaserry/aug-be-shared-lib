@@ -11,6 +11,7 @@ import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from './interfaces/user.interface';
 import { UserPassword } from './interfaces/user-password.interface';
 import { Encrypter } from '../../utils';
+import { PaginationOptions } from '../../decorators/pagination.decorator';
 
 @Injectable()
 export class UsersService {
@@ -52,5 +53,13 @@ export class UsersService {
 
   async findOne(whereColumn) {
     return await this.userModel.findOne(whereColumn);
+  }
+
+  async findAll(pagination?: PaginationOptions): Promise<User[]> {
+    try {
+      return await this.userModel.find().limit(pagination.limit).skip(pagination.skip).exec();
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

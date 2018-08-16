@@ -9,6 +9,8 @@ import { wrapConflict, wrapSuccess, wrapBadrequest, wrapNocontent } from 'aug-ne
 import { AuthGuard } from '@nestjs/passport';
 import * as jwt from 'jsonwebtoken';
 
+import { Pagination, PaginationOptions } from '../../decorators/pagination.decorator';
+
 @Controller('/users')
 @UseGuards(AuthGuard('jwt'))
 export class UsersController {
@@ -21,6 +23,14 @@ export class UsersController {
             res.status(HttpStatus.OK).json(wrapSuccess(result, 'Here is the user information.'));
         } else {
             res.status(HttpStatus.OK).json(wrapNocontent('No content available'));
+        }
+    }
+
+    @Get()
+    async findAll(@Res() res,  @Pagination() pagination: PaginationOptions) {
+        const result = await this.usersService.findAll(pagination);
+        if (result.length > 0) {
+            res.status(HttpStatus.OK).json(wrapSuccess(result, 'Here is all users informations.'));
         }
     }
 
