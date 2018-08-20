@@ -8,7 +8,8 @@
 import { Document } from 'mongoose';
 export interface User extends Document {
   name?: string;
-  email?: string; // Username
+  email?: string; // Email Id
+  uname?: string; // Username
   role?: number;
   profile?: object;
   pwd?: string; // Password

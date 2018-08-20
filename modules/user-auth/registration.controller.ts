@@ -18,7 +18,7 @@ export class RegistrationController {
   constructor(private readonly authService: UserAuthService) { }
   @Post('/register')
   async register(@Body() user: User, @Res() res): Promise<any> {
-    const userExist: User[] = await this.authService.find({ uname: user.email });
+    const userExist: User[] = await this.authService.find({ $or: [{ email: user.email }, { uname: user.uname }] });
     if (userExist.length === 0) {
       const result = await this.authService.register(user);
       if (result) {
@@ -27,7 +27,7 @@ export class RegistrationController {
         res.status(HttpStatus.BAD_REQUEST).json(result);
       }
     } else {
-      res.status(HttpStatus.CONFLICT).json(wrapConflict('User already exist!'));
+      res.status(HttpStatus.OK).json(wrapConflict('User already exist!'));
     }
   }
 }
