@@ -11,7 +11,7 @@ import { Model, ValidationError } from 'mongoose';
 import { UserJwtPayload } from './interfaces/user-jwt-payload.interface';
 import { User } from '../users/interfaces/user.interface';
 import { UserCredential } from './interfaces/user-credential.interface';
-import { Encrypter } from '../../utils';
+import { Encrypter, statusCode } from '../../utils';
 import { wrapError } from '../../../aug-nest-tools';
 
 @Injectable()
@@ -32,7 +32,7 @@ export class UserAuthService {
       const createdUser = new this.userAuthModel(user);
       return await createdUser.save();
     } catch (e) {
-      throw new HttpException(e, HttpStatus.UNAUTHORIZED);
+      throw new HttpException(e, await statusCode(e));
     }
 
   }

@@ -1,3 +1,5 @@
+import { HttpStatus } from '@nestjs/common';
+
 export async function generateToken(strLength: number) {
     const stringArray: string[] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c',
         'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
@@ -11,4 +13,16 @@ export async function generateToken(strLength: number) {
         rndString = rndString + stringArray[rndNum];
     }
     return rndString;
+}
+
+export async function statusCode(err) {
+    if (err) {
+        if (err.name === 'ValidationError') {
+            return HttpStatus.BAD_REQUEST;
+        } else if (err.name === 'MongoError') {
+            return HttpStatus.CONFLICT;
+        } else {
+            return HttpStatus.UNAUTHORIZED;
+        }
+    }
 }
