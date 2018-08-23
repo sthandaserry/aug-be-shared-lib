@@ -1,3 +1,3 @@
 export interface UserJwtPayload {
-  email: string;
+  uname: string;
 }

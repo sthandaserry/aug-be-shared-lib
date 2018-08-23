@@ -18,15 +18,15 @@ export class UserForgotpasswordController {
   @Patch('/forgotpassword')
   async forgotPassword(@Body() body): Promise<any> {
     const resetToken = await generateToken(10);
-    const admin = await this.authService.forgotPassword(body.email, resetToken);
-    if (admin) {
+    const user = await this.authService.forgotPassword(body.data, resetToken);
+    if (user) {
       this.mailerProvider.sendMail({
-        to: 'kaalee6@gmail.com',
+        to: user.email,
         from: process.env.FROM,
         subject: 'Biggest Buck reset password',
-        html: '<b>Your reset code is: </b>' + admin.token,
+        html: '<b>Your reset code is: </b>' + user.token,
       });
-      return wrapSuccess({ token: admin.token }, 'Email send successfully.');
+      return wrapSuccess({ token: user.token }, 'Email send successfully.');
     } else {
       return wrapError(null, 'Email not found');
     }

@@ -38,12 +38,12 @@ export class UserAuthService {
   }
   async authenticate(credential: UserCredential): Promise<any> {
     try {
-      const user: User = await this.userAuthModel.findOne({ email: credential.email });
+      const user: User = await this.userAuthModel.findOne({ uname: credential.uname });
       if (user) {
         const encrypter = new Encrypter();
         if (await encrypter.doesPasswordMatch(credential.pwd, user.hpwd, user.salt)) {
-          const userObj: UserJwtPayload = { email: user.email };
-          const expiresIn = 3600;
+          const userObj: UserJwtPayload = { uname: user.uname };
+          const expiresIn = 3600 * 24;
           const accessToken = jwt.sign(userObj, process.env.SECRET_KEY, { expiresIn });
           return {
             expiresIn,
@@ -60,12 +60,12 @@ export class UserAuthService {
 
   }
 
-  async forgotPassword(email: any, token: string): Promise<any> {
+  async forgotPassword(data: any, token: string): Promise<any> {
     try {
-      const user: User = await this.userAuthModel.findOne({ email });
+      const user: User = await this.userAuthModel.findOne({ $or: [{ email: data }, { uname: data }] });
       if (user) {
         user.token = token;
-        return await this.userAuthModel.findOneAndUpdate({ email: user.email }, { token }).exec();
+        return await this.userAuthModel.findOneAndUpdate({ email: user.email }, { token }, {new : true}).exec();
       } else {
         return wrapError(null, 'Email not found.');
       }

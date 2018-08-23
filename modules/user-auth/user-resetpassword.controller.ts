@@ -17,8 +17,8 @@ export class UserResetpasswordController {
   constructor(private readonly authService: UserAuthService) { }
   @Patch('/resetpassword')
   async resetpassword(@Body() body): Promise<any> {
-    const admin = await this.authService.resetPassword(body);
-    if (admin) {
+    const user = await this.authService.resetPassword(body);
+    if (user) {
       return wrapSuccess(null, 'Password changed successfully.');
     }else{
       return wrapError(null, 'Token is invalid.');

@@ -7,6 +7,6 @@
  */
 import { Document } from 'mongoose';
 export interface UserCredential extends Document {
-  readonly email: string; // Username
+  readonly uname: string; // Username
   readonly pwd: string; // Password
 }
