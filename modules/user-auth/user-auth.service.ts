@@ -65,7 +65,7 @@ export class UserAuthService {
       const user: User = await this.userAuthModel.findOne({ $or: [{ email: data }, { uname: data }] });
       if (user) {
         user.token = token;
-        return await this.userAuthModel.findOneAndUpdate({ email: user.email }, { token }, {new : true}).exec();
+        return await this.userAuthModel.findOneAndUpdate({ email: user.email }, { token }, { new: true }).exec();
       } else {
         return wrapError(null, 'Email not found.');
       }
@@ -92,7 +92,7 @@ export class UserAuthService {
   }
 
   async validateUser(payload: UserJwtPayload): Promise<any> {
-    return await this.userAuthModel.findOne({ email: payload.email });
+    return await this.userAuthModel.findOne({ uname: payload.uname });
   }
 
   async find(whereColumn): Promise<User[]> {
