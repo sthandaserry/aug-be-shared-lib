@@ -5,7 +5,7 @@ import {
 import { AdminsService } from './admins.service';
 import { Admin } from './interfaces/admin.interface';
 import { Password } from './interfaces/password.interface';
-import { wrapConflict, wrapSuccess, wrapBadrequest, wrapNocontent } from 'aug-nest-tools';
+import { wrapConflict, wrapSuccess, wrapBadrequest, wrapNocontent } from '../../utils/envelope';
 import { AuthGuard } from '@nestjs/passport';
 import * as jwt from 'jsonwebtoken';
 import { Pagination, PaginationOptions } from '../../decorators/pagination.decorator';
