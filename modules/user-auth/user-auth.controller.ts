@@ -23,7 +23,7 @@ export class UserAuthController {
       res.status(HttpStatus.OK).json(wrapSuccess(result, 'Authenticated Successfully.'));
       return result;
     } else {
-      res.status(HttpStatus.BAD_REQUEST).json(wrapBadrequest('Invalid Credentials.'));
+      res.status(HttpStatus.OK).json(wrapBadrequest('Invalid Credentials.'));
     }
   }
 }
