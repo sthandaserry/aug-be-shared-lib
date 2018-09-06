@@ -52,7 +52,11 @@ export class UsersService {
   }
 
   async findOne(whereColumn) {
-    return await this.userModel.findOne(whereColumn);
+    try {
+      return await this.userModel.findOne(whereColumn);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async findAll(pagination?: PaginationOptions): Promise<User[]> {
