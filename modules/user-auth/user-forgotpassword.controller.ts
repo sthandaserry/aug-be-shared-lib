@@ -19,7 +19,7 @@ export class UserForgotpasswordController {
   async forgotPassword(@Body() body): Promise<any> {
     const resetToken = await generateToken(10);
     const user = await this.authService.forgotPassword(body.data, resetToken);
-    if (user) {
+    if (!user.statusCode) {
       this.mailerProvider.sendMail({
         to: user.email,
         from: process.env.FROM,
