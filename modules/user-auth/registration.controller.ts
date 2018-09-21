@@ -18,7 +18,10 @@ export class RegistrationController {
   constructor(private readonly authService: UserAuthService) { }
   @Post('/register')
   async register(@Body() user: User, @Res() res): Promise<any> {
-    const userExist: User[] = await this.authService.find({ $or: [{ email: user.email }, { uname: user.uname }] });
+    const userExist: User[] = await this.authService.find({
+      $or: [{ email: { $regex: user.email, $options: '$i' } },
+      { uname: { $regex: user.uname, $options: '$i' } }],
+    });
     if (userExist.length === 0) {
       const result = await this.authService.register(user);
       if (result) {
