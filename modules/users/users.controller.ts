@@ -50,7 +50,7 @@ export class UsersController {
         if (result) {
             res.status(HttpStatus.ACCEPTED).json(wrapSuccess(result, 'Updated Successfully.'));
         } else {
-            res.status(HttpStatus.BAD_REQUEST).json(wrapBadrequest('Invalid Credentials.'));
+            res.status(HttpStatus.OK).json(wrapBadrequest('Invalid Credentials.'));
         }
     }
 }
