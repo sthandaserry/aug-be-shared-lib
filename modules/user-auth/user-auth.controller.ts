@@ -21,7 +21,6 @@ export class UserAuthController {
     const result = await this.authService.authenticate(credential);
     if (result) {
       res.status(HttpStatus.OK).json(wrapSuccess(result, 'Authenticated Successfully.'));
-      return result;
     } else {
       res.status(HttpStatus.OK).json(wrapBadrequest('Invalid Credentials.'));
     }

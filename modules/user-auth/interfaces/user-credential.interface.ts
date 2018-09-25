@@ -5,8 +5,7 @@
  * created: 13/07/2018
  * lastModified: 13/07/2018
  */
-import { Document } from 'mongoose';
-export interface UserCredential extends Document {
+export interface UserCredential {
   readonly uname: string; // Username
   readonly pwd: string; // Password
 }

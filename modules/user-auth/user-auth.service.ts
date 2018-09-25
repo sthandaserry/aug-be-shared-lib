@@ -56,7 +56,7 @@ export class UserAuthService {
         }
       }
     } catch (e) {
-      throw new HttpException(e, HttpStatus.UNAUTHORIZED);
+       throw new HttpException(e, HttpStatus.UNAUTHORIZED);
     }
 
   }
