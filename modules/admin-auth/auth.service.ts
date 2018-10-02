@@ -25,7 +25,7 @@ export class AuthService {
       if (user) {
         const encrypter = new Encrypter();
         if (await encrypter.doesPasswordMatch(credential.pwd, user.hpwd, user.salt)) {
-          const userObj: JwtPayload = { uname: user.uname };
+          const userObj: JwtPayload = { _id: user._id, uname: user.uname };
           const expiresIn = 3600 * 24;
           const accessToken = jwt.sign(userObj, process.env.SECRET_KEY, { expiresIn });
           return {
