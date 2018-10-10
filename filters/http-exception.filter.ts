@@ -20,7 +20,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
 
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
-      if (process.env.NODE_ENV === 'production') {
+      if (process.env.NODE_ENV === 'prod') {
         console.error(exception.stack);
         return response.status(status).send(exception.stack);
       }
