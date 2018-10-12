@@ -53,7 +53,7 @@ export class UsersService {
 
   async findOne(whereColumn) {
     try {
-      return await this.userModel.findOne(whereColumn);
+      return await this.userModel.findOne(whereColumn).populate('profile.sId', 'name');
     } catch (e) {
       console.log(e);
     }
