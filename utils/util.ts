@@ -19,6 +19,10 @@ export function randomAlphaNumeric() {
     return Math.random().toString(36).substring(2, 6) + Math.random().toString(36).substring(2, 6);
 }
 
+export function randomNumeric() {
+    return Math.floor(100000 + Math.random() * 900000);
+}
+
 export async function statusCode(err) {
     if (err) {
         if (err.name === 'ValidationError') {

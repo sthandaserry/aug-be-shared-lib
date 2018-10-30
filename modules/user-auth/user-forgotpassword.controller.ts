@@ -10,15 +10,15 @@ import { Controller, Get, UseGuards, Body, Post, Res, HttpStatus, Patch, HttpExc
 import { AuthGuard } from '@nestjs/passport';
 import { UserAuthService } from './user-auth.service';
 import { UserCredential } from './interfaces/user-credential.interface';
-import { wrapSuccess, wrapBadrequest, generateToken, wrapConflict, wrapError } from '../../../aug-nest-tools';
+import { wrapSuccess, wrapBadrequest, generateToken, wrapConflict, wrapError, randomNumeric } from '../../../aug-nest-tools';
 @Controller('auth')
 export class UserForgotpasswordController {
   constructor(private readonly authService: UserAuthService, @Inject('MailerProvider') private readonly mailerProvider,
   ) { }
   @Patch('/forgotpassword')
   async forgotPassword(@Body() body): Promise<any> {
-    const resetToken = await generateToken(10);
-    const user = await this.authService.forgotPassword(body.data, resetToken);
+    const resetToken = await randomNumeric();
+    const user = await this.authService.forgotPassword(body.data, resetToken.toString());
     if (!user.statusCode) {
       this.mailerProvider.sendMail({
         to: user.email,
