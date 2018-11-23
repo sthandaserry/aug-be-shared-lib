@@ -81,9 +81,8 @@ export class UserAuthService {
       if (user) {
         const encrypter = new Encrypter();
         const salt = encrypter.createSalt();
-        user.salt = salt;
-        user.hpwd = encrypter.hashPwd(salt, data.pwd as string);
-        return await this.userAuthModel.findOneAndUpdate({ email: user.email }, { user, $unset: { token: 1 } }).exec();
+        const hpwd = encrypter.hashPwd(salt, data.pwd as string);
+        return await this.userAuthModel.findOneAndUpdate({ email: user.email }, { salt, hpwd,  $unset: { token: 1 } }).exec();
       } else {
         return false;
       }
