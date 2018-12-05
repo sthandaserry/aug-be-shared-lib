@@ -4,3 +4,4 @@ export * from './admin-auth';
 export * from './user-auth';
 export * from './database';
 export * from './common';
+export * from './notifications';
