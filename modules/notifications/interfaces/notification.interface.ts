@@ -14,6 +14,7 @@ export interface Notification extends Document {
   fId: string; // User Id (From)
   tId: string; // User Id (To)
   jId?: string; // contest Id
+  eId?: string; // Entry Id
   readonly cAt?: Date; // Created At
   readonly mAt?: Date; // Modified At
 }
