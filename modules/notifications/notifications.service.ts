@@ -47,8 +47,9 @@ export class NotificationsService {
     }
   }
 
-  async find(whereColumn): Promise<Notification[]> {
-    return await this.notificationModel.find(whereColumn).exec();
+  async find(whereColumn, pagination?: PaginationOptions): Promise<Notification[]> {
+    return await this.notificationModel.find(whereColumn).populate('fId', 'profile.img').populate('jId', 'conId').populate('eId', 'conId')
+    .sort({ $natural: -1 }).limit(pagination.limit).skip(pagination.skip).exec();
   }
 
   async findOne(whereColumn) {

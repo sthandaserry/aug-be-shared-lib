@@ -10,27 +10,18 @@ import * as jwt from 'jsonwebtoken';
 import { Pagination, PaginationOptions } from '../../decorators/pagination.decorator';
 
 @Controller('/notifications')
-// @UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'))
 export class NotificationsController {
 
     constructor(private readonly notificationsService: NotificationsService) { }
 
-    @Post()
-    async create(@Body() notification: Notification, @Res() res) {
-
-            const result = await this.notificationsService.create(notification);
-            if (result) {
-                res.status(HttpStatus.CREATED).json(wrapSuccess(result, 'Created Successfully.'));
-            } else {
-                res.status(HttpStatus.BAD_REQUEST).json(result);
-            }
-    }
-
-    @Get()
-    async findAll(@Res() res,  @Pagination() pagination: PaginationOptions) {
-        const result = await this.notificationsService.findAll(pagination);
+    @Get('/user/:userId')
+    async findAll(@Res() res, @Pagination() pagination: PaginationOptions, @Param() params) {
+        const result = await this.notificationsService.find({ tId: params.userId }, pagination);
         if (result.length > 0) {
             res.status(HttpStatus.OK).json(wrapSuccess(result, 'Here is all notification informations.'));
+        } else {
+            res.status(HttpStatus.OK).json(wrapNocontent('No content available'));
         }
     }
 
@@ -44,13 +35,11 @@ export class NotificationsController {
         }
     }
 
-    @Put('/:id')
-    async update(@Body() notification: Notification, @Res() res, @Param() params) {
-        const result = await this.notificationsService.update(notification, params.id);
+    @Patch('/:id')
+    async updateStatus(@Body() notification: Notification, @Res() res, @Param() param) {
+        const result = await this.notificationsService.update(notification, param.id);
         if (result) {
             res.status(HttpStatus.ACCEPTED).json(wrapSuccess(result, 'Updated Successfully.'));
-        } else {
-            res.status(HttpStatus.BAD_REQUEST).json(result);
         }
     }
 }
