@@ -56,7 +56,7 @@ export class UserAuthService {
         }
       }
     } catch (e) {
-       throw new HttpException(e, HttpStatus.UNAUTHORIZED);
+      throw new HttpException(e, HttpStatus.UNAUTHORIZED);
     }
 
   }
@@ -82,7 +82,20 @@ export class UserAuthService {
         const encrypter = new Encrypter();
         const salt = encrypter.createSalt();
         const hpwd = encrypter.hashPwd(salt, data.pwd as string);
-        return await this.userAuthModel.findOneAndUpdate({ email: user.email }, { salt, hpwd,  $unset: { token: 1 } }).exec();
+        return await this.userAuthModel.findOneAndUpdate({ email: user.email }, { salt, hpwd, $unset: { token: 1 } }, { new: true }).exec();
+      } else {
+        return false;
+      }
+    } catch (e) {
+      throw new HttpException(wrapError(e, 'Something went wrong.'), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async resetUsername(data: any): Promise<any> {
+    try {
+      const user: User = await this.userAuthModel.findOne({ token: data.token });
+      if (user) {
+        return await this.userAuthModel.findOneAndUpdate({ email: user.email }, { uname: data.uname, $unset: { token: 1 } }, { new: true }).exec();
       } else {
         return false;
       }
